@@ -67,12 +67,32 @@ and enables future research towards neuro-symbolic AI by integrating LLMs and Kn
 <div datatype="rdf:HTML" property="schema:description">
       <h2 property="schema:name">Introduction</h2>
 
-      <p>This is a great article on the Semantic Web <span class="references">[<a href="#ref-1">1</a>]</span>, written in Markdown.</p>
+      <p>The paradigm of neuro-symbolic artificial intelligence <span class="references">[<a href="#ref-1">1</a>]</span>
+aims to integrate symbolic reasoning with machine learning,
+to improve overall accuracy, trustworthiness, and explainability.
+Graph-based retrieval augmented generation (GraphRAG) <span class="references">[<a href="#ref-2">2</a>]</span> offers one approach to achieve neuro-symbolic AI
+by combining vector embedding-based semantic retrieval with explicit graph structures (e.g., Knowledge Graphs)
+for guiding answers from Large Language Models (LLMs) through vector search.</p>
 
-      <p>Make sure to <a href="https://www.principiae.be/book/pdfs/TM&amp;Th-2.0-summary.pdf">write your document effectively</a>!</p>
+      <p>GraphRAG techniques involve embedding generation for specific Knowledge Graphs.
+This means that LLMs can not directly incorporate arbitrary Knowledge Graphs without preprocessing them first.
+The zero-shot approach for SPARQL-based question answering introduced in GRASP <span class="references">[<a href="#ref-3">3</a>]</span>
+offers one solution of this problem.
+It offers functions that can be called by LLM agents to interact with a Knowledge Graph.</p>
 
-      <p class="todo">Write proper introduction.
-More information on snippets like this can be found on the <a href="https://github.com/rubensworks/ScholarMarkdown/wiki/Snippets">ScholarMarkdown wiki</a>.</p>
+      <p>Recently, <a property="schema:citation http://purl.org/spar/cito/cites" href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a> <span class="references">[<a href="#ref-4">4</a>]</span> was introduced that allows LLM agents to connect to external systems.
+Concretely, it allows MCP servers to offer specific <em>tools</em> that can produce a certain output based on various parameters.
+These tools are described externally in a human-readable format to the LLM,
+and internally connects to specific systems such as the file system, code editors, or databases.
+One main advantage of MCP is that it runs over live systems, and does not require embedding-like precomputions.
+As such, it offers an excellent opportunity for connecting arbitrary Knowledge Graphs.</p>
+
+      <p>Within this demonstration, we introduce Comunica MCP SPARQL and show how it works.
+Comunica MCP SPARQL exposes the functionalities of the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://comunica.github.io/Article-ISWC2018-Resource/">Comunica SPARQL querying framework</a> <span class="references">[<a href="#ref-5">5</a>]</span> through an MCP interface.
+In the next section (<a href="#implementation">Section 2</a>), we describe the implementation and main functionalities of Comunica MCP SPARQL.
+Next, in <a href="#findings">Section 3</a> we discuss preliminary findings,
+followed by a discussion of our demonstration in <a href="#demonstration">Section 4</a>,
+and conclusions in <a href="#conclusions">Section 5</a>.</p>
 
     </div>
 </section>
@@ -81,8 +101,33 @@ More information on snippets like this can be found on the <a href="https://gith
 <div datatype="rdf:HTML" property="schema:description">
       <h2 property="schema:name">Implementation</h2>
 
-      <p class="todo">Write me</p>
+      <p>Comunica MCP SPARQL is a TypeScript/JavaScript project that builds upon the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://comunica.github.io/Article-ISWC2018-Resource/">Comunica SPARQL querying framework</a> <span class="references">[<a href="#ref-5">5</a>]</span>.
+It is open-source, available on <a href="https://github.com/comunica/comunica-feature-mcp/" class="mandatory" data-link-text="https:/​/​github.com/​comunica/​comunica-​feature-​mcp/​">GitHub</a>, the <a href="https://npmjs.com/package/@comunica/mcp-sparql" class="mandatory" data-link-text="https:/​/​npmjs.com/​package/​@comunica/​mcp-​sparql">npm package manager</a>,
+and is available under the MIT license.
+Comunica is a modular SPARQL framwork that enables SPARQL querying over decentralized Knowledge Graphs.
+This includes Knowledge Graphs exposed as <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2013/REC-sparql11-protocol-20130321/">SPARQL endpoints</a> <span class="references">[<a href="#ref-6">6</a>]</span>,
+<a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/DesignIssues/LinkedData.html">Linked Data documents</a> <span class="references">[<a href="#ref-7">7</a>]</span> in any RDF representation, TPF interfaces <span class="references">[<a href="#ref-8">8</a>]</span>, HDT files <span class="references">[<a href="#ref-9">9</a>]</span>, Solid pods <span class="references">[<a href="#ref-10">10</a>]</span>, and more.
+In contrast to GRASP, Comunica MCP SPARQL is exposed through the standardized MCP protocol instead of using direct function calling.
+Furthermore, besides allowing the LLM agent to execute any possible query,
+Comunica MCP SPARQL also dynamically allows the agent to provide one or more Knowledge Graph URL to query over.
+And if the AI agent does not know what URLs to start from,
+the engine can perform link traversal <span class="references">[<a href="#ref-11">11</a>, <a href="#ref-12">12</a>]</span> to discover relevant sources by following links.</p>
 
+      <p>Comunica MCP SPARQL is not the first MCP approach for SPARQL, but it has some notable differences to existing work.
+Certain SPARQL engine vendors have their own dedicated MCP servers, such as
+<a href="https://github.com/ramuzes/mcp-jena" class="mandatory" data-link-text="https:/​/​github.com/​ramuzes/​mcp-​jena">Jena</a>,
+<a href="https://graphdb.ontotext.com/documentation/11.1/using-graphdb-llm-tools-with-external-clients.html" class="mandatory" data-link-text="https:/​/​graphdb.ontotext.com/​documentation/​11.1/​using-​graphdb-​llm-​tools-​with-​external-​clients.html">GraphDB</a>,
+and <a href="https://lobehub.com/mcp/vairpower-stardog_graphrag_mcp_poc" class="mandatory" data-link-text="https:/​/​lobehub.com/​mcp/​vairpower-​stardog_graphrag_mcp_poc">Stardog</a>.
+These MCP servers are tied to these systems, while Comunica MCP SPARQL works with any Knowledge Graph.
+Furthermore, <a href="https://github.com/emekaokoye/mcp-rdf-explorer" class="mandatory" data-link-text="https:/​/​github.com/​emekaokoye/​mcp-​rdf-​explorer">RDF Explorer</a> and SPARQL-MCP <span class="references">[<a href="#ref-13">13</a>]</span> are not tied to specific Knowledge Graphs,
+but in contrast to Comunica MCP SPARQL,
+they only handles Knowledge Graphs exposed through SPARQL endpoints.
+SPARQL-MCP is the only tool that also supports federation,
+but in contrast to Comunica MCP SPARQL,
+it requires the LLM agent to explicitly include <code>SERVICE</code> keywords within the query,
+while Comunica assigns these automatically and offers virtually integrated Knowledge Graph access.</p>
+
+      <p class="todo">TODO: explain tools…</p>
     </div>
 </section>
 
@@ -91,6 +136,8 @@ More information on snippets like this can be found on the <a href="https://gith
       <h2 property="schema:name">Findings</h2>
 
       <p class="todo">Write me</p>
+
+      <p class="todo">Internalization of DBpedia and Wikidata during pretraining. <span class="references">[<a href="#ref-14">14</a>]</span></p>
 
     </div>
 </section>
@@ -108,7 +155,8 @@ More information on snippets like this can be found on the <a href="https://gith
 <div datatype="rdf:HTML" property="schema:description">
       <h2 property="schema:name">Conclusions</h2>
 
-      <p class="todo">Write me</p>
+      <p class="todo">Write me
+Instead of thinking fast and slow, consider llms more as orchestrators through MCP.</p>
 
     </div>
 </section>
@@ -128,7 +176,33 @@ More information on snippets like this can be found on the <a href="https://gith
 <h2 id="references">References</h2>
 <dl class="references">
   <dt id="ref-1">[1]</dt>
-  <dd resource="#semanticweb" typeof="schema:Article">Berners-Lee, T., Hendler, J., Lassila, O., others: The semantic web. Scientific American. 284, 28–37 (2001).</dd>
+  <dd resource="#neurosymbolicai" typeof="schema:Article">Hitzler, P., Sarker, M.: Neuro-symbolic AI= neural+ logical+ probabilistic AI. Neuro-Symbolic Artificial Intelligence: The State of the Art. 342, 173 (2022).</dd>
+  <dt id="ref-2">[2]</dt>
+  <dd resource="#graphrag" typeof="schema:Article">Edge, D., Trinh, H., Cheng, N., Bradley, J., Chao, A., Mody, A., Truitt, S., Metropolitansky, D., Ness, R.O., Larson, J.: From local to global: A graph rag approach to query-focused summarization. arXiv preprint arXiv:2404.16130. (2024).</dd>
+  <dt id="ref-3">[3]</dt>
+  <dd resource="#grasp" typeof="schema:Article">Walter, S., Bast, H.: GRASP: Generic reasoning and SPARQL generation across knowledge graphs. In: International Semantic Web Conference. pp. 271–289. Springer (2025).</dd>
+  <dt id="ref-4">[4]</dt>
+  <dd resource="https://modelcontextprotocol.io/" typeof="schema:CreativeWork">Model Context Protocol. <a href="https://modelcontextprotocol.io/">https:/​/​modelcontextprotocol.io/</a> (2026).</dd>
+  <dt id="ref-5">[5]</dt>
+  <dd resource="https://comunica.github.io/Article-ISWC2018-Resource/" typeof="schema:Article">Taelman, R., Van Herwegen, J., Vander Sande, M., Verborgh, R.: Comunica: a Modular SPARQL Query Engine for the Web. In: Proceedings of the 17th International Semantic Web Conference (2018).</dd>
+  <dt id="ref-6">[6]</dt>
+  <dd resource="https://www.w3.org/TR/2013/REC-sparql11-protocol-20130321/" typeof="schema:CreativeWork">Feigenbaum, L., Todd Williams, G., Grant Clark, K., Torres, E.: SPARQL 1.1 Protocol. W3C, <a href="https://www.w3.org/TR/2013/REC-sparql11-protocol-20130321/">https:/​/​www.w3.org/TR/2013/REC-sparql11-protocol-20130321/</a> (2013).</dd>
+  <dt id="ref-7">[7]</dt>
+  <dd resource="https://www.w3.org/DesignIssues/LinkedData.html" typeof="schema:CreativeWork">Berners-Lee, T.: Linked Data. <a href="https://www.w3.org/DesignIssues/LinkedData.html">https:/​/​www.w3.org/DesignIssues/LinkedData.html</a> (2009).</dd>
+  <dt id="ref-8">[8]</dt>
+  <dd resource="#tpf" typeof="schema:Article">Verborgh, R., Vander Sande, M., Hartig, O., Van Herwegen, J., De Vocht, L., De Meester, B., Haesendonck, G., Colpaert, P.: Triple Pattern Fragments: a low-cost Knowledge Graph Interface for the Web. Journal of Web Semantics. 37, 184–206 (2016).</dd>
+  <dt id="ref-9">[9]</dt>
+  <dd resource="#hdt" typeof="schema:Article">Fernández, J.D., Martı́nez-Prieto Miguel A, Gutiérrez, C., Polleres, A., Arias, M.: Binary RDF representation for publication and exchange (HDT). Journal of Web Semantics. 19, 22–41 (2013).</dd>
+  <dt id="ref-10">[10]</dt>
+  <dd resource="#solid" typeof="schema:Article">Sambra, A.V., Mansour, E., Hawke, S., Zereba, M., Greco, N., Ghanem, A., Zagidulin, D., Aboulnaga, A., Berners-Lee, T.: Solid: a platform for decentralized social applications based on linked data. MIT CSAIL &amp; Qatar Computing Research Institute, Tech. Rep. 2016, (2016).</dd>
+  <dt id="ref-11">[11]</dt>
+  <dd resource="#linktraversalfoundations" typeof="schema:Article">Hartig, O., Freytag, J.-C.: Foundations of Traversal based Query Execution over Linked Data. In: Proceedings of the 23rd ACM conference on Hypertext and social media. pp. 43–52. ACM (2012).</dd>
+  <dt id="ref-12">[12]</dt>
+  <dd resource="#solidquery" typeof="schema:Article">Taelman, R., Verborgh, R.: Link Traversal Query Processing over Decentralized Environments with Structural Assumptions. In: Proceedings of the 22nd International Semantic Web Conference (2023).</dd>
+  <dt id="ref-13">[13]</dt>
+  <dd resource="#sparqlmcp" typeof="schema:CreativeWork">Dobriy, D., Bauer, F., Azzam, A., Banerjee, D., Polleres, A.: Agentic SPARQL: Evaluating SPARQL-MCP-powered Intelligent Agents on the Federated KGQA Benchmark. (2026).</dd>
+  <dt id="ref-14">[14]</dt>
+  <dd resource="#internalizedwikidatadbpedia" typeof="schema:Article">Ranaldi, F., Zugarini, A., Ranaldi, L., Zanzotto, F.M.: Protoknowledge Shapes Behaviour of LLMs in Downstream Tasks: Memorization and Generalization with Knowledge Graphs. arXiv preprint arXiv:2505.15501. (2025).</dd>
 </dl>
 </section>
 </footer>
