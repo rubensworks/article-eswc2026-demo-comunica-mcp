@@ -14,5 +14,5 @@ Furthermore, LLMs seem to struggle with writing federated queries, and can even 
 For this, Comunica MCP SPARQL is a tool that acts as an enabler for future research.
 For instance, there is a need for more research on how well agents can understand other Knowledge Graphs besides DBpedia and Wikidata,
 for which exposing additional tools in line with those of [GRASP](cite:cites grasp) could be valuable.
-Furthermore, more research is needed on guiding agents towards query-relevant relevant Knowledge Graphs,
+Furthermore, more research is needed on guiding agents towards query-relevant Knowledge Graphs,
 similar to the work set out by the authors of [SPARQL-MCP](cite:cites sparqlmcp).
