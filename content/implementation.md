@@ -20,7 +20,7 @@ and [Stardog](https://github.com/noahgorstein/mcp-server-stardog){:.mandatory}.
 These MCP servers are tied to these systems, while Comunica MCP SPARQL works with any Knowledge Graph.
 [RDF Explorer](https://github.com/emekaokoye/mcp-rdf-explorer){:.mandatory} and [SPARQL-MCP](cite:cites sparqlmcp) are not tied to specific Knowledge Graphs,
 but in contrast to Comunica MCP SPARQL,
-they only handles Knowledge Graphs exposed through SPARQL endpoints.
+they only handle Knowledge Graphs exposed through SPARQL endpoints.
 Among these two, SPARQL-MCP is the only one that also supports federation,
 but in contrast to Comunica MCP SPARQL,
 it requires the LLM agent to explicitly include `SERVICE` keywords within the query,
