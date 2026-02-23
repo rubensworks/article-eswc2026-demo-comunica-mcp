@@ -15,7 +15,7 @@ This is because internally, this second question leads to a SPARQL query over DB
 which causes a more complete answer to be produced.
 When connected to a Solid pod,
 prompts such as *"Using Comunica SPARQL Solid, can you show me information about myself based on my profile?"* can be answered.
-Similarly, we show the extent to which webMCP can bring the same use-cases within people's browser.  
+Similarly, we demonstrate the extent to which webMCP makes these use cases achievable directly within the browser environment.
 
 <figure id="claude-example">
 <img src="img/claude.png" alt="[An example of using Comunica MCP SPARQL in Claude]">
