@@ -1,11 +1,10 @@
 ## Demonstration
 {:#demonstration}
 
-The goal of this demonstration is to show the functionalities of Comunica MCP SPARQL,
-as well as current limitations, to trigger discussions for future work.
-Concretely, we will run an instance of the Comunica MCP SPARQL, and connect different LLM-based AI chatbots with it,
-such as Claude and ChatGPT.
-Through various promts, participants will be able to see how answers can be formed more accurately through this MCP server.
+This demonstration shows the functionalities and current limitations of Comunica MCP SPARQL,
+to trigger discussions for future work.
+Concretely, we will run Comunica MCP SPARQL locally, and connect different LLM-based AI chatbots with it.
+Through various prompts, participants can see answer accuracy improve.
 
 For example, when using Claude to ask *"What movies do both Brad Pitt and Leonardo DiCaprio both play in?"*,
 only a single answer is produced; namely "Once Upon a Time in Hollywood".
@@ -23,3 +22,7 @@ Similarly, we demonstrate the extent to which webMCP makes these use cases achie
 Get all movies Brad Pitt and Leonardo DiCaprio both play in with Claude.
 </figcaption>
 </figure>
+
+Comunica MCP still requires a dedicated MCP server, which contradicts Comunica's goal to enable pure client-side execution.
+To address this limitation, we will also demonstrate a prototype of Comunica MCP that uses [WebMCP](cite:cites webmcp)
+to expose MCP capabilities through the Web browser via [https://query.comunica.dev/](https://query.comunica.dev/).
