@@ -11,7 +11,7 @@ GraphRAG techniques involve embedding generation for specific Knowledge Graphs.
 This means that LLMs can not directly incorporate arbitrary Knowledge Graphs without preprocessing them first.
 The zero-shot approach for SPARQL-based question answering introduced in [GRASP](cite:cites grasp)
 offers one solution of this problem,
-whcih offers functions that can be called by LLM agents to interact with a Knowledge Graph.
+which offers functions that can be called by LLM agents to interact with a Knowledge Graph.
 
 Recently, the [Model Context Protocol (MCP)](cite:cites mcp) was introduced that allows LLM agents to connect to external systems.
 Concretely, it allows MCP servers to offer specific *tools* that can produce a certain output based on various parameters.
