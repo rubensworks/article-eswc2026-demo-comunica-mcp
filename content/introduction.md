@@ -18,5 +18,10 @@ Concretely, it allows MCP servers to offer specific *tools* that can produce a c
 These tools are described externally in a human-readable format to the LLM,
 and internally connects to specific systems such as the file system, code editors, or databases.
 One main advantage of MCP is that it runs over live systems, and does not require embedding-like precomputions.
+Conversely, Comunica MCP requires a remotely or locally running MCP server and Comunica engine which contradicts Comunica's goal to push execution to the client.
+To this end, [webMCP](cite:cites webmcp), a recent W3C community group report, aims to bring MCP to the browser by allowing web pages to register available tools to the browser through `navigator.modelContext`.
 As such, it offers an excellent opportunity for connecting arbitrary Knowledge Graphs on the fly.
-Within this demonstration, we introduce Comunica MCP SPARQL that provides this connection point, and show how it works.
+Within this demonstration, we introduce Comunica MCP SPARQL, providing a connection point between LLMS and Comunica, and show how it works.
+Additionally, we demonstrate how webMCP within
+[Comunica's web UI](https://query.comunica.dev/){:.mandatory}
+can bring MCP to the browser.
