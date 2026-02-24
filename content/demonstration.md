@@ -7,14 +7,13 @@ Concretely, we will run Comunica MCP SPARQL locally, and connect different LLM-b
 Through various prompts, participants can see answer accuracy improve.
 
 For example, when using Claude to ask *"What movies do both Brad Pitt and Leonardo DiCaprio both play in?"*,
-only a single answer is produced; namely "Once Upon a Time in Hollywood".
+only a single answer is produced; namely _"Once Upon a Time in Hollywood"_.
 However, when asking *"Use Comunica SPARQL to determine what movies both Brad Pitt and Leonardo DiCaprio both play in."* (see [](#claude-example)),
 we receive a more accurate answer; *"Once Upon a Time in Hollywood and The Audition"*.
 This is because internally, this second question leads to a SPARQL query over DBpedia,
 which causes a more complete answer to be produced.
 When connected to a Solid pod,
 prompts such as *"Using Comunica SPARQL Solid, can you show me information about myself based on my profile?"* can be answered.
-Similarly, we demonstrate the extent to which webMCP makes these use cases achievable directly within the browser environment.
 
 <figure id="claude-example">
 <img src="img/claude.png" alt="[An example of using Comunica MCP SPARQL in Claude]">
