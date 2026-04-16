@@ -11,7 +11,7 @@
   <meta name="citation_author" content="Ruben Taelman" />
   <meta name="citation_author" content="Jitse De Smet" />
   
-  <meta name="citation_publication_date" content="2026/02/24" />
+  <meta name="citation_publication_date" content="2026/04/16" />
 </head>
 
 <body prefix="dctypes: http://purl.org/dc/dcmitype/ pimspace: http://www.w3.org/ns/pim/space# rsa: http://www.w3.org/ns/auth/rsa# cert: http://www.w3.org/ns/auth/cert# wgs: http://www.w3.org/2003/01/geo/wgs84_pos# biblio: http://purl.org/net/biblio# bibo: http://purl.org/ontology/bibo/ book: http://purl.org/NET/book/vocab# ov: http://open.vocab.org/terms/ doap: http://usefulinc.com/ns/doap# dbr: http://dbpedia.org/resource/ dbp: http://dbpedia.org/property/ sio: http://semanticscience.org/resource/ opmw: http://www.opmw.org/ontology/ deo: http://purl.org/spar/deo/ doco: http://purl.org/spar/doco/ cito: http://purl.org/spar/cito/ fabio: http://purl.org/spar/fabio/ solid: http://www.w3.org/ns/solid/terms# acl: http://www.w3.org/ns/auth/acl# dio: https://w3id.org/dio# lsc: http://linkedscience.org/lsc/ns#" typeof="schema:CreativeWork sioc:Post prov:Entity lsc:Research">
@@ -55,7 +55,7 @@ Our preliminary findings show that modern LLMs can effectively query over well k
 but can struggle when querying other Knowledge Graphs,
 or try to write federated queries.
 <!-- Conclusion   -->
-In conclusion, Comunica MCP SPARQL is a tool that offers a path towards trustworthy and explainable AI,
+In conclusion, Comunica MCP SPARQL is a tool that offers a path towards trustworthy and explainable agentic AI,
 <!-- Perspectives -->
 and enables future research towards neuro-symbolic AI by integrating LLMs and Knowledge Graphs.</p>
 
@@ -99,13 +99,28 @@ Within this demonstration, we introduce Comunica MCP SPARQL that provides this c
       <p>Comunica MCP SPARQL is a TypeScript/JavaScript project that exposes all functionalities of the <a property="schema:citation http://purl.org/spar/cito/cites" href="https://comunica.github.io/Article-ISWC2018-Resource/">Comunica SPARQL querying framework</a> <span class="references">[<a href="#ref-5">5</a>]</span> through MCP.
 It is open-source, available on <a href="https://github.com/comunica/comunica-feature-mcp/" class="mandatory" data-link-text="https:/​/​github.com/​comunica/​comunica-​feature-​mcp/​">GitHub</a>, npm, and is available under the MIT license.
 Comunica is a modular SPARQL framwork that enables SPARQL querying over decentralized Knowledge Graphs.
-This includes Knowledge Graphs exposed as SPARQL endpoints <span class="references">[<a href="#ref-6">6</a>]</span>,
-Linked Data documents <span class="references">[<a href="#ref-7">7</a>]</span> in any RDF representation, TPF interfaces <span class="references">[<a href="#ref-8">8</a>]</span>, HDT files <span class="references">[<a href="#ref-9">9</a>]</span>, Solid pods <span class="references">[<a href="#ref-10">10</a>]</span>, and more.
+This includes Knowledge Graphs exposed as <a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/TR/2013/REC-sparql11-protocol-20130321/">SPARQL endpoints</a> <span class="references">[<a href="#ref-6">6</a>]</span>,
+<a property="schema:citation http://purl.org/spar/cito/cites" href="https://www.w3.org/DesignIssues/LinkedData.html">Linked Data documents</a> <span class="references">[<a href="#ref-7">7</a>]</span> in any RDF representation, TPF interfaces <span class="references">[<a href="#ref-8">8</a>]</span>, HDT files <span class="references">[<a href="#ref-9">9</a>]</span>, Solid pods <span class="references">[<a href="#ref-10">10</a>]</span>, and more.
 In contrast to GRASP, Comunica MCP SPARQL is exposed through the more flexible MCP instead of using direct function calling.
+MCP is very simple to setup, as it only requires a minimal configuration change within LLM agents, as can be seen in <a href="#mcp-config">Listing 1</a>.
 Furthermore, besides allowing the LLM agent to execute any possible SPARQL 1.2 query,
 Comunica MCP SPARQL allows agents to provide one or more Knowledge Graph URLs to query over.
 And if the AI agent does not know what URLs to start from,
 link traversal <span class="references">[<a href="#ref-11">11</a>, <a href="#ref-12">12</a>]</span> can be used to discover relevant sources by following links.</p>
+
+      <figure id="mcp-config" class="listing">
+<pre><code>{
+</code><code>  &quot;mcpServers&quot;: {
+</code><code>    &quot;comunica-sparql&quot;: {
+</code><code>      &quot;command&quot;: &quot;npx&quot;,
+</code><code>      &quot;args&quot;: [ &quot;-y&quot;, &quot;@comunica/mcp-sparql&quot;, &quot;--mode&quot; &quot;stdio&quot; ]
+</code><code>    }
+</code><code>  }
+</code><code>}</code></pre>
+<figcaption>
+          <p><span class="label">Listing 1:</span> An example of the only configuration change needed to configure Comunica MCP SPARQL within tools such as Claude or Copilot.</p>
+        </figcaption>
+</figure>
 
       <p>Comunica MCP SPARQL is not the first MCP approach for SPARQL, but it has some notable differences to existing work.
 Some SPARQL engine vendors have their own dedicated MCP servers, such as
@@ -123,6 +138,27 @@ while Comunica enables automatic source selection.
 Furthermore, all advanced features from Comunica are exposed through MCP,
 such as HTTP proxy support, timeout settings, and authentication (e.g for updates).</p>
 
+      <p>Below, we list the tools that Comunica MCP SPARQL exposes to LLMs,
+together with their LLM-directed descriptions and (a subset of) the available parameters:</p>
+
+      <ul>
+        <li><code>query-sparql</code>: Execute SPARQL queries over one or more remote sources, which also includes update queries.
+          <ul>
+            <li><code>query</code> (required): SPARQL query string.</li>
+            <li><code>sources</code> (required): List of SPARQL endpoint URLs, TPF interface URLs, or Lin</li>
+            <li><code>httpProxy</code> (optional): HTTP proxy URL (e.g., http://proxy.example.com:8080).</li>
+            <li><code>httpAuth</code> (optional): HTTP basic authentication in the format username:password.</li>
+          </ul>
+        </li>
+        <li><code>query-sparql-rdf</code>: Execute SPARQL queries over a serialized RDF dataset provided as a string.
+          <ul>
+            <li><code>query</code> (required): SPARQL query string.</li>
+            <li><code>value</code> (required): Serialized RDF dataset as a string.</li>
+            <li><code>mediaType</code> (required): Media type of the serialized RDF dataset.</li>
+          </ul>
+        </li>
+      </ul>
+
     </div>
 </section>
 
@@ -135,6 +171,13 @@ to trigger discussions for future work.
 Concretely, we will run Comunica MCP SPARQL locally, and connect different LLM-based AI chatbots with it.
 Through various prompts, participants can see answer accuracy improve.</p>
 
+      <figure id="claude-example">
+<img src="img/claude.png" alt="[An example of using Comunica MCP SPARQL in Claude]" />
+<figcaption>
+          <p><span class="label">Fig. 1:</span> Get all movies Brad Pitt and Leonardo DiCaprio both play in with Claude.</p>
+        </figcaption>
+</figure>
+
       <p>For example, when using Claude to ask <em>“What movies do both Brad Pitt and Leonardo DiCaprio both play in?”</em>,
 only a single answer is produced; namely <em>“Once Upon a Time in Hollywood”</em>.
 However, when asking <em>“Use Comunica SPARQL to determine what movies both Brad Pitt and Leonardo DiCaprio both play in.”</em> (see <a href="#claude-example">Fig. 1</a>),
@@ -143,13 +186,6 @@ This is because internally, this second question leads to a SPARQL query over DB
 which causes a more complete answer to be produced.
 When connected to a Solid pod,
 prompts such as <em>“Using Comunica SPARQL Solid, can you show me information about myself based on my profile?”</em> can be answered.</p>
-
-      <figure id="claude-example">
-<img src="img/claude.png" alt="[An example of using Comunica MCP SPARQL in Claude]" />
-<figcaption>
-          <p><span class="label">Fig. 1:</span> Get all movies Brad Pitt and Leonardo DiCaprio both play in with Claude.</p>
-        </figcaption>
-</figure>
 
       <p>Comunica MCP still requires a dedicated MCP server, which contradicts Comunica’s goal to enable pure client-side execution.
 To address this limitation, we will also demonstrate a prototype of Comunica MCP that uses <a property="schema:citation http://purl.org/spar/cito/cites" href="https://webmachinelearning.github.io/webmcp/">WebMCP</a> <span class="references">[<a href="#ref-14">14</a>]</span>
@@ -197,27 +233,27 @@ We thank Daniel Dobriy for discussions on MCP within the GOBLIN COST Action (CA2
 <h2 id="references">References</h2>
 <dl class="references">
   <dt id="ref-1">[1]</dt>
-  <dd resource="#neurosymbolicai" typeof="schema:Article">Hitzler, P., Sarker, M.: Neuro-symbolic AI= neural+ logical+ probabilistic AI. Neuro-Symbolic Artificial Intelligence: The State of the Art. 342, (2022).</dd>
+  <dd resource="#neurosymbolicai" typeof="schema:Article">Hitzler, P., Sarker, M.: Neuro-symbolic AI= neural+ logical+ probabilistic AI. Neuro-Symbolic Artificial Intelligence: The State of the Art. 342, 173 (2022).</dd>
   <dt id="ref-2">[2]</dt>
-  <dd resource="#graphrag" typeof="schema:Article">Edge, D., Trinh, H., Cheng, N.: From local to global: A graph rag approach to query-focused summarization. arXiv preprint arXiv:2404.16130.</dd>
+  <dd resource="#graphrag" typeof="schema:Article">Edge, D., Trinh, H., Cheng, N., Bradley, J., Chao, A., Mody, A., Truitt, S., Metropolitansky, D., Ness, R.O., Larson, J.: From local to global: A graph rag approach to query-focused summarization. arXiv preprint arXiv:2404.16130. (2024).</dd>
   <dt id="ref-3">[3]</dt>
-  <dd resource="#grasp" typeof="schema:Article">Walter, S., Bast, H.: GRASP: Generic reasoning and SPARQL generation across knowledge graphs. In: International Semantic Web Conference. Springer (2025).</dd>
+  <dd resource="#grasp" typeof="schema:Article">Walter, S., Bast, H.: GRASP: Generic reasoning and SPARQL generation across knowledge graphs. In: International Semantic Web Conference. pp. 271–289. Springer (2025).</dd>
   <dt id="ref-4">[4]</dt>
   <dd resource="https://modelcontextprotocol.io/" typeof="schema:CreativeWork">Model Context Protocol. <a href="https://modelcontextprotocol.io/">https:/​/​modelcontextprotocol.io/</a> (2026).</dd>
   <dt id="ref-5">[5]</dt>
   <dd resource="https://comunica.github.io/Article-ISWC2018-Resource/" typeof="schema:Article">Taelman, R., Van Herwegen, J., Vander Sande, M., Verborgh, R.: Comunica: a Modular SPARQL Query Engine for the Web. In: Proceedings of ISWC (2018).</dd>
   <dt id="ref-6">[6]</dt>
-  <dd resource="#spec:sparqlprot" typeof="schema:CreativeWork">Feigenbaum, L., Todd Williams, G., Grant Clark, K., Torres, E.: SPARQL 1.1 Protocol. W3C (2013).</dd>
+  <dd resource="https://www.w3.org/TR/2013/REC-sparql11-protocol-20130321/" typeof="schema:CreativeWork">Feigenbaum, L., Todd Williams, G., Grant Clark, K., Torres, E.: SPARQL 1.1 Protocol. W3C, <a href="https://www.w3.org/TR/2013/REC-sparql11-protocol-20130321/">https:/​/​www.w3.org/TR/2013/REC-sparql11-protocol-20130321/</a> (2013).</dd>
   <dt id="ref-7">[7]</dt>
-  <dd resource="#linkeddata" typeof="schema:CreativeWork">Berners-Lee, T.: Linked Data (2009).</dd>
+  <dd resource="https://www.w3.org/DesignIssues/LinkedData.html" typeof="schema:CreativeWork">Berners-Lee, T.: Linked Data. <a href="https://www.w3.org/DesignIssues/LinkedData.html">https:/​/​www.w3.org/DesignIssues/LinkedData.html</a> (2009).</dd>
   <dt id="ref-8">[8]</dt>
-  <dd resource="#tpf" typeof="schema:Article">Verborgh, R., Vander Sande, M., Hartig, O., Van Herwegen, J., De Vocht, L., De Meester, B., Haesendonck, G., Colpaert, P.: Triple Pattern Fragments: a low-cost Knowledge Graph Interface for the Web. Journal of Web Semantics. 37, (2016).</dd>
+  <dd resource="#tpf" typeof="schema:Article">Verborgh, R., Vander Sande, M., Hartig, O., Van Herwegen, J., De Vocht, L., De Meester, B., Haesendonck, G., Colpaert, P.: Triple Pattern Fragments: a low-cost Knowledge Graph Interface for the Web. Journal of Web Semantics. 37, 184–206 (2016).</dd>
   <dt id="ref-9">[9]</dt>
-  <dd resource="#hdt" typeof="schema:Article">Fernández, J.D., Martı́nez-Prieto Miguel A, Gutiérrez, C., Polleres, A., Arias, M.: Binary RDF representation for publication and exchange (HDT). Journal of Web Semantics. 19, (2013).</dd>
+  <dd resource="#hdt" typeof="schema:Article">Fernández, J.D., Martı́nez-Prieto Miguel A, Gutiérrez, C., Polleres, A., Arias, M.: Binary RDF representation for publication and exchange (HDT). Journal of Web Semantics. 19, 22–41 (2013).</dd>
   <dt id="ref-10">[10]</dt>
-  <dd resource="#solid" typeof="schema:Article">Sambra, A.V., Mansour, E., Hawke, S., Zereba, M., Greco, N.: Solid: a platform for decentralized social applications based on linked data. 2016, (2016).</dd>
+  <dd resource="#solid" typeof="schema:Article">Sambra, A.V., Mansour, E., Hawke, S., Zereba, M., Greco, N., Ghanem, A., Zagidulin, D., Aboulnaga, A., Berners-Lee, T.: Solid: a platform for decentralized social applications based on linked data. MIT CSAIL &amp; Qatar Computing Research Institute, Tech. Rep. 2016, (2016).</dd>
   <dt id="ref-11">[11]</dt>
-  <dd resource="#linktraversalfoundations" typeof="schema:Article">Hartig, O., Freytag, J.-C.: Foundations of Traversal based Query Execution over Linked Data. In: Proceedings of the 23rd ACM conference on Hypertext and social media. ACM (2012).</dd>
+  <dd resource="#linktraversalfoundations" typeof="schema:Article">Hartig, O., Freytag, J.-C.: Foundations of Traversal based Query Execution over Linked Data. In: Proceedings of the 23rd ACM conference on Hypertext and social media. pp. 43–52. ACM (2012).</dd>
   <dt id="ref-12">[12]</dt>
   <dd resource="#solidquery" typeof="schema:Article">Taelman, R., Verborgh, R.: Link Traversal Query Processing over Decentralized Environments with Structural Assumptions. In: Proceedings of ISWC (2023).</dd>
   <dt id="ref-13">[13]</dt>
