@@ -23,5 +23,5 @@ When connected to a Solid pod,
 prompts such as *"Using Comunica SPARQL Solid, can you show me information about myself based on my profile?"* can be answered.
 
 Comunica MCP still requires a dedicated MCP server, which contradicts Comunica's goal to enable pure client-side execution.
-To address this limitation, we will also demonstrate a prototype of Comunica MCP that uses [WebMCP](cite:cites webmcp)
+To address this limitation, we will also [demonstrate](video/screencast.mp4) a prototype of Comunica MCP that uses [WebMCP](cite:cites webmcp)
 to expose MCP capabilities through the Web browser via [https://query.comunica.dev/](https://query.comunica.dev/).
